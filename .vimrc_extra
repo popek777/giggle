@@ -1,0 +1,20 @@
+
+function! s:FMakeProject(build_dir)
+  cgetexpr system('make -C ' . a:build_dir . ' -j 12')
+  copen
+endfunction
+
+function! s:FBuildAndExportGigglePackage()
+  let l:build = system('make -C build/RelWithDebInfo -j 12')
+  let l:export = system('conan export-pkg . user/channel -f')
+  "cgetexpr l:build . l:export 
+  cgetexpr l:build
+  copen
+endfunction
+
+command! -nargs=0 MakeLib :call s:FBuildAndExportGigglePackage()
+command! -nargs=0 MakeTest :call s:FMakeProject('test_package/build/RelWithDebInfo')
+
+nmap <F7> :MakeLib<CR>
+nmap <F8> :MakeTest<CR>
+
